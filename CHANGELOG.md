@@ -29,6 +29,12 @@
   the property value.
 * Computed properties on Realm object types are detected and no
   longer added to the automatically generated schema.
+* Remove deprecated `{RLM}SyncPermission` and `{RLM}SyncPermissionChange`
+  classes. Use `{RLM}SyncPermissionValue` instead.
+* Remove deprecated `-[RLMSyncUser permissionRealmWithError:]` and
+  `SyncUser.permissionRealm()` APIs. Use the new permissions system.
+* Remove deprecated error `RLMSyncErrorBadResponse`. Use
+  `RLMSyncAuthErrorBadResponse` instead.
 
 ### Enhancements
 
