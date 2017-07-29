@@ -314,7 +314,7 @@ static NSURL *syncDirectoryForChildProcess() {
         XCTFail(@"Download waiter did not queue; session was invalid or errored out.");
         return;
     }
-    [self waitForExpectations:@[ex] timeout:10.0];
+    [self waitForExpectations:@[ex] timeout:20.0];
     if (error) {
         *error = theError;
     }
@@ -338,7 +338,7 @@ static NSURL *syncDirectoryForChildProcess() {
         XCTFail(@"Upload waiter did not queue; session was invalid or errored out.");
         return;
     }
-    [self waitForExpectations:@[ex] timeout:10.0];
+    [self waitForExpectations:@[ex] timeout:20.0];
     if (error) {
         *error = theError;
     }
