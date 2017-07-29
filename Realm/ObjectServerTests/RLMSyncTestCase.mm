@@ -305,11 +305,15 @@ static NSURL *syncDirectoryForChildProcess() {
     NSAssert(session, @"Cannot call with invalid URL");
     XCTestExpectation *ex = expectation ?: [self expectationWithDescription:@"Download waiter expectation"];
     __block NSError *theError = nil;
-    [session waitForDownloadCompletionOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
-                                     callback:^(NSError *err){
-                                         theError = err;
-                                         [ex fulfill];
-                                     }];
+    BOOL queued = [session waitForDownloadCompletionOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
+                                                   callback:^(NSError *err){
+                                                       theError = err;
+                                                       [ex fulfill];
+                                                   }];
+    if (!queued) {
+        XCTFail(@"Download waiter did not queue; session was invalid or errored out.");
+        return;
+    }
     [self waitForExpectations:@[ex] timeout:10.0];
     if (error) {
         *error = theError;
@@ -325,11 +329,15 @@ static NSURL *syncDirectoryForChildProcess() {
     NSAssert(session, @"Cannot call with invalid URL");
     XCTestExpectation *ex = [self expectationWithDescription:@"Upload waiter expectation"];
     __block NSError *theError = nil;
-    [session waitForUploadCompletionOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
-                                   callback:^(NSError *err){
-                                       theError = err;
-                                       [ex fulfill];
-                                   }];
+    BOOL queued = [session waitForUploadCompletionOnQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
+                                                 callback:^(NSError *err){
+                                                     theError = err;
+                                                     [ex fulfill];
+                                                 }];
+    if (!queued) {
+        XCTFail(@"Upload waiter did not queue; session was invalid or errored out.");
+        return;
+    }
     [self waitForExpectations:@[ex] timeout:10.0];
     if (error) {
         *error = theError;
